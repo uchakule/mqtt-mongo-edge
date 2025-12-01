@@ -1,0 +1,5 @@
+paho-mqtt==1.6.1
+pymongo==4.5.0
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+python-dotenv==1.0.0

@@ -1,0 +1,46 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>MQTT → Mongo Edge Viewer</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px;}
+    table { border-collapse: collapse; width: 100%;}
+    th, td { border: 1px solid #ddd; padding: 8px;}
+    th { background:#f2f2f2; text-align:left; }
+  </style>
+</head>
+<body>
+  <h1>Recent Stored Messages</h1>
+  <table id="tbl">
+    <thead>
+      <tr><th>received_at</th><th>topic</th><th>payload</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function fetchData(){
+      try {
+        const resp = await fetch('/api/data?limit=30');
+        const data = await resp.json();
+        const tbody = document.querySelector('#tbl tbody');
+        tbody.innerHTML = '';
+        data.forEach(d=>{
+          const tr = document.createElement('tr');
+          const t1 = document.createElement('td'); t1.textContent = d.received_at || '';
+          const t2 = document.createElement('td'); t2.textContent = d.topic;
+          const t3 = document.createElement('td'); t3.textContent = JSON.stringify(d.payload);
+          tr.appendChild(t1); tr.appendChild(t2); tr.appendChild(t3);
+          tbody.appendChild(tr);
+        });
+      } catch(e){
+        console.error(e);
+      }
+    }
+    setInterval(fetchData, 3000);
+    fetchData();
+  </script>
+</body>
+</html>
